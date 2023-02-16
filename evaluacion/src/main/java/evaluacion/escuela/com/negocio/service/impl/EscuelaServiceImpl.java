@@ -16,7 +16,6 @@ import evaluacion.escuela.com.negocio.service.IescuelaService;
 import evaluacion.escuela.com.negocio.utils.Utils;
 import evaluacion.escuela.com.negocio.utils.constants;
 import evaluacion.escuela.com.persistence.entity.CalificacionesEntity;
-import evaluacion.escuela.com.persistence.entity.MateriasAlumnoEntity;
 import evaluacion.escuela.com.persistence.repository.IMateriasAlumnoRepository;
 import evaluacion.escuela.com.persistence.repository.IcalificacionesRepository;
 
@@ -54,7 +53,7 @@ public class EscuelaServiceImpl extends constants implements IescuelaService {
 
 	@Override
 	public CalificacionesAlumnoDto getCalificaciones(String idAlumno) throws IOException {
-		CalificacionesAlumnoDto response=new CalificacionesAlumnoDto();
+		CalificacionesAlumnoDto response = new CalificacionesAlumnoDto();
 		List<MateriasAlumnoDto> materias = materiasAlumnoRepository.getMateriasByAlumno(idAlumno);
 		response.setCalificaciones(materias);
 		response.setPromedio(Utils.calculaPromedio(materias));
@@ -63,8 +62,8 @@ public class EscuelaServiceImpl extends constants implements IescuelaService {
 
 	@Override
 	public GenericResponseDto dropCalificacion(String idCalificacion) throws IOException {
-			calificacioneRepository.deleteById(idCalificacion);
-		 return new GenericResponseDto(OK, SMS_EXITO_DROP_CAL);
+		calificacioneRepository.deleteById(idCalificacion);
+		return new GenericResponseDto(OK, SMS_EXITO_DROP_CAL);
 	}
 
 }
