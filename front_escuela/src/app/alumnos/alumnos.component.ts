@@ -63,11 +63,12 @@ export class AlumnosComponent implements OnInit {
     this.dataSource!.paginator = this.paginator!;
   }
 
-  verDetalle(id:any){
+  verDetalle(id:any,nombre:any,apterno:any,materno:any){
     localStorage.setItem("home","false")
     localStorage.setItem("alumnos","false")
     localStorage.setItem("calificaciones","true");
     localStorage.setItem("idAlumno",id);
+    localStorage.setItem("nombreC",nombre+" "+apterno+" "+ materno);
     window.location.reload()
   }
 

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MateriasAlumnoDto {
 	private String idUsuario;
+	private String idCalificacion;
 	private String nombre;
 	private String apellido;
 	private String materia;

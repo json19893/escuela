@@ -26,5 +26,23 @@ export class pointService {
       'mode':'no-cors'});*/
     return this.http.get<any>(AppUrlSettings.BASE_API + AppUrlSettings.GET_CALIFICACIONES+"?idAlumno="+idAlumno);
   }
- 
+  dropCalificaciones(idCalificacion:any): Observable<any> {
+    /*var headers = new HttpHeaders({
+      'Authorization': token,
+      'mode':'no-cors'});*/
+    return this.http.get<any>(AppUrlSettings.BASE_API + AppUrlSettings.DROP_CALIFICACIONES+"?idCalificacion="+idCalificacion);
+  }
+  getMaterias(): Observable<any> {
+    /*var headers = new HttpHeaders({
+      'Authorization': token,
+      'mode':'no-cors'});*/
+    return this.http.get<any>(AppUrlSettings.BASE_API + AppUrlSettings.GET_MATERIAS);
+  }
+
+  putCalificacion(calificacion:any): Observable<any> {
+    /*var headers = new HttpHeaders({
+      'Authorization': token,
+      'mode':'no-cors'});*/
+    return this.http.post<any>(AppUrlSettings.BASE_API + AppUrlSettings.PUT_CALIFICACION,calificacion);
+  }
 }

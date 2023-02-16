@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MateriasAlumnoEntity {
 	private String idUsuario;
+	private String idCalificacion;
 	private String nombre;
 	private String apellido;
 	private String materia;

@@ -5,12 +5,17 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { pointService } from '../services/poinst.service';
-interface alumno {
-  id: string;
+import {MatSnackBar} from '@angular/material/snack-bar';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {calificacionMateria} from '../model/calificacionMateria'
+interface calificacion {
+  idUsuario: string;
+  idCalificacion:string;
   nombre: string;
-  ap_paterno: string;
-  ap_materno: string;
-  activo: number;
+  apellido: string;
+  materia:string;
+  calificacion: number;
+  fechaRegistro: string;
 }
 
 @Component({
@@ -21,22 +26,38 @@ interface alumno {
 })
 
 export class CalificacionesComponent implements OnInit {
-  dataSource = new MatTableDataSource<alumno>;
-  ELEMENT_DATA: alumno[] = [];
-  columnsToDisplay = ['nombre', 'paterno', 'materno', 'estatus','acciones'];
+  public calificacionAlum:calificacionMateria | undefined;
+  dataSource = new MatTableDataSource<calificacion>;
+  ELEMENT_DATA: calificacion[] = [];
+  columnsToDisplay = ['materia', 'calificacion', 'fecha','acciones'];
   color: ThemePalette = 'primary';
   public idAlumno:any;
+  public promedio:any;
+  public nombre:any;
+  public materias:any;
+  seleccionada: string = ""
+  formRegister: FormGroup | any;
   @ViewChild('paginator') paginator: MatPaginator | undefined;
   constructor(
     private router: Router,
     private spinner: NgxSpinnerService,
-    private service: pointService
+    private service: pointService,
+    private _snackBar: MatSnackBar,
+   
 
-  ) {}
+  ) {
+    const regexPattern  = /\-?\d*\.?\d{1,2}/;
+    this.formRegister = new FormGroup({
+      mate: new FormControl('', [Validators.required]),
+      califi: new FormControl('', [Validators.required,Validators.min(2),Validators.pattern(regexPattern)])
+    });
+  }
 
   ngOnInit() {
     this.idAlumno= localStorage.getItem("idAlumno")
-    this.getAlumnos(this.idAlumno);
+    this.nombre= localStorage.getItem("nombreC")
+    this.getCalificaciones(this.idAlumno);
+    this.getMaterias()
     setTimeout(() => {
       /** spinner ends after 5 seconds */
       this.spinner.hide();
@@ -44,12 +65,13 @@ export class CalificacionesComponent implements OnInit {
 
   }
 
-  getAlumnos(idAlumno:any){
+  getCalificaciones(idAlumno:any){
     this.service.getCalificaciones(idAlumno).subscribe(
       res => {
         console.log("res: "+res)
-        this.ELEMENT_DATA = res;
-        this.dataSource = new MatTableDataSource<alumno>(this.ELEMENT_DATA);
+        this.promedio=res.promedio==undefined?0.0:res.promedio==null?0.0:res.promedio=="NaN"?0.0:res.promedio
+        this.ELEMENT_DATA = res.calificaciones;
+        this.dataSource = new MatTableDataSource<calificacion>(this.ELEMENT_DATA);
         this.dataSource!.paginator = this.paginator!;
         this.spinner.hide();
       })
@@ -65,8 +87,38 @@ export class CalificacionesComponent implements OnInit {
     this.dataSource!.paginator = this.paginator!;
   }
 
-  verDetalle(id:any){
+  delete(id:any){
+    this.service.dropCalificaciones(id).subscribe(
+      res => {
+        this._snackBar.open(res.msg, "cerrar",{
+          duration: 3000
+        });
+        this.getCalificaciones(this.idAlumno); 
+      })
 
+
+  }
+
+  getMaterias(){
+    this.service.getMaterias().subscribe(
+      res => {
+        this.materias=res
+        
+      })
+  }
+  agregar(){
+    if(!this.formRegister.valid){
+      return;
+    }
+    this.calificacionAlum=new calificacionMateria(this.formRegister.value.mate, this.idAlumno,this.formRegister.value.califi,null);
+    this.service.putCalificacion( this.calificacionAlum).subscribe(
+      res => {
+        this._snackBar.open(res.msg, "cerrar",{
+          duration: 3000
+        });
+        this.getCalificaciones(this.idAlumno); 
+      })
+      
   }
 
 }

@@ -43,6 +43,10 @@ public class EscuelaServiceImpl extends constants implements IescuelaService {
 		}
 		Optional<CalificacionesEntity> calificacion = Optional.ofNullable(new CalificacionesEntity());
 		if (data.getIdCalificacion() == null) {
+			Integer val=calificacioneRepository.existeMateria(data.getIdMateria(), data.getIdUsuario());
+			if(val>0) {
+				return new GenericResponseDto(ERROR, SMS_MATERIA_CARGADA);
+			}
 			calificacion.get().setCalificacion(data.getCalificacion());
 			calificacion.get().setFecha_registro(Utils.formatoFecha(LocalDate.now()));
 			calificacion.get().setId_materias(data.getIdMateria());
