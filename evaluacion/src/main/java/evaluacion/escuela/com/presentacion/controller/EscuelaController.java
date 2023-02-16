@@ -1,6 +1,7 @@
 package evaluacion.escuela.com.presentacion.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,6 +16,8 @@ import evaluacion.escuela.com.negocio.dto.CalificacionesAlumnoDto;
 import evaluacion.escuela.com.negocio.dto.GenericResponseDto;
 import evaluacion.escuela.com.negocio.dto.RequestCalificationDto;
 import evaluacion.escuela.com.negocio.service.IescuelaService;
+import evaluacion.escuela.com.persistence.entity.AlumnosEntity;
+import evaluacion.escuela.com.persistence.entity.MateriasEntity;
 
 @RestController
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST })
@@ -37,6 +40,16 @@ public class EscuelaController {
 	public GenericResponseDto dropCalificacion(@RequestParam(required = true) String idCalificacion)
 			throws IOException {
 		return escuelaService.dropCalificacion(idCalificacion);
+	}
+
+	@GetMapping("/getAlumnos")
+	public List<AlumnosEntity> getAlumnos() throws IOException {
+		return escuelaService.getAlumnos();
+	}
+
+	@GetMapping("/getMaterias")
+	public List<MateriasEntity> getMaterias() throws IOException {
+		return escuelaService.getMaterias();
 	}
 
 }

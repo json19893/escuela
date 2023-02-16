@@ -15,9 +15,13 @@ import evaluacion.escuela.com.negocio.dto.RequestCalificationDto;
 import evaluacion.escuela.com.negocio.service.IescuelaService;
 import evaluacion.escuela.com.negocio.utils.Utils;
 import evaluacion.escuela.com.negocio.utils.constants;
+import evaluacion.escuela.com.persistence.entity.AlumnosEntity;
 import evaluacion.escuela.com.persistence.entity.CalificacionesEntity;
+import evaluacion.escuela.com.persistence.entity.MateriasEntity;
 import evaluacion.escuela.com.persistence.repository.IMateriasAlumnoRepository;
+import evaluacion.escuela.com.persistence.repository.IalumnosRepository;
 import evaluacion.escuela.com.persistence.repository.IcalificacionesRepository;
+import evaluacion.escuela.com.persistence.repository.ImateriasRepository;
 
 @Service
 public class EscuelaServiceImpl extends constants implements IescuelaService {
@@ -26,7 +30,10 @@ public class EscuelaServiceImpl extends constants implements IescuelaService {
 	IcalificacionesRepository calificacioneRepository;
 	@Autowired
 	IMateriasAlumnoRepository materiasAlumnoRepository;
-
+	@Autowired
+	IalumnosRepository alumnosRepository;
+	@Autowired
+	ImateriasRepository materiasRepository;
 	@Override
 	public GenericResponseDto putCalificacion(RequestCalificationDto data) throws IOException {
 
@@ -64,6 +71,16 @@ public class EscuelaServiceImpl extends constants implements IescuelaService {
 	public GenericResponseDto dropCalificacion(String idCalificacion) throws IOException {
 		calificacioneRepository.deleteById(idCalificacion);
 		return new GenericResponseDto(OK, SMS_EXITO_DROP_CAL);
+	}
+
+	@Override
+	public List<AlumnosEntity> getAlumnos() throws IOException {	
+		return alumnosRepository.findAll();
+	}
+
+	@Override
+	public List<MateriasEntity> getMaterias() throws IOException {
+		return materiasRepository.findAll();
 	}
 
 }
