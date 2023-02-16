@@ -9,6 +9,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {calificacionMateria} from '../model/calificacionMateria'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
+const EXCEL_EXTENSION = '.xlsx';
+const EXCEL_TYPE = 'application/vnd.openxmlformats- officedocument.spreadsheetml.sheet;charset=UTF-8';
 interface calificacion {
   idUsuario: string;
   idCalificacion:string;
@@ -140,6 +144,22 @@ dialogRef.afterClosed().subscribe(result => {
       })
       
   }
+  ExportTOExcel()
+  {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.ELEMENT_DATA);
+    const workbook: XLSX.WorkBook = { Sheets: { 'homologacion': worksheet }, 
+   SheetNames: ['homologacion'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' 
+  });
+    this.saveAsExcelFile(excelBuffer, "Relacion de materias");
+    
+  }
+  saveAsExcelFile(buffer: any, fileName: string) {
+    const data: Blob = new Blob([buffer], { type: EXCEL_TYPE });
+    FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + 
+  EXCEL_EXTENSION);
+  }
+
 
 }
 
