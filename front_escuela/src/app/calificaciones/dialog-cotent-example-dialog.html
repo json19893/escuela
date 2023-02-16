@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Install Angular</h2>
+<mat-dialog-content class="mat-typography">
+    <form class="example-form" [formGroup]="formRegister"  (ngSubmit)="agregar()" novalidate>
+      
+          <mat-form-field appearance="fill">
+            <mat-label>Calificacion</mat-label>
+            <input  matInput formControlName="califi"   required  minlength="1" maxlength="3">
+    
+          </mat-form-field>
+          &nbsp;&nbsp;
+          <button [disabled]="!formRegister.valid" mat-raised-button color="primary" mat-button
+                      class="bot">Guardar</button>
+      </form>
+</mat-dialog-content>

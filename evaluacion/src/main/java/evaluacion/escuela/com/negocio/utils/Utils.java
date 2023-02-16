@@ -1,5 +1,6 @@
 package evaluacion.escuela.com.negocio.utils;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -25,11 +26,13 @@ public class Utils {
 
 	public static double calculaPromedio(List<MateriasAlumnoDto> materias) {	
 			Integer totalMaterias=materias.size();
+			DecimalFormat df = new DecimalFormat("#.00");
 			double total=0.0;
 			for(MateriasAlumnoDto m:materias) {
 				total=total+m.getCalificacion();
 			}
-		return total/totalMaterias;
+			String res=df.format(total/totalMaterias);
+		return Double.parseDouble(res) ;
 	}
 
 }

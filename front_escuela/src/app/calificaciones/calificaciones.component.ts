@@ -8,6 +8,7 @@ import { pointService } from '../services/poinst.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {calificacionMateria} from '../model/calificacionMateria'
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 interface calificacion {
   idUsuario: string;
   idCalificacion:string;
@@ -35,20 +36,28 @@ export class CalificacionesComponent implements OnInit {
   public promedio:any;
   public nombre:any;
   public materias:any;
+  public val='';
   seleccionada: string = ""
   formRegister: FormGroup | any;
+  formUpdate: FormGroup | any;
   @ViewChild('paginator') paginator: MatPaginator | undefined;
+
   constructor(
     private router: Router,
     private spinner: NgxSpinnerService,
     private service: pointService,
     private _snackBar: MatSnackBar,
+    public dialog: MatDialog
    
 
   ) {
     const regexPattern  = /\-?\d*\.?\d{1,2}/;
     this.formRegister = new FormGroup({
       mate: new FormControl('', [Validators.required]),
+      califi: new FormControl('', [Validators.required,Validators.min(2),Validators.pattern(regexPattern)])
+    });
+
+    this.formUpdate = new FormGroup({
       califi: new FormControl('', [Validators.required,Validators.min(2),Validators.pattern(regexPattern)])
     });
   }
@@ -98,6 +107,16 @@ export class CalificacionesComponent implements OnInit {
 
 
   }
+  update(id:any){
+ localStorage.setItem("idMateria",id)
+const dialogRef = this.dialog.open(DialogContentExampleDialog);
+
+dialogRef.afterClosed().subscribe(result => {
+  console.log(`Dialog result: ${result}`);
+});
+}
+ 
+  
 
   getMaterias(){
     this.service.getMaterias().subscribe(
@@ -117,6 +136,7 @@ export class CalificacionesComponent implements OnInit {
           duration: 3000
         });
         this.getCalificaciones(this.idAlumno); 
+        this.formRegister.reset()
       })
       
   }
@@ -125,3 +145,52 @@ export class CalificacionesComponent implements OnInit {
 
 
 
+
+@Component({
+  selector: 'dialog-content-example-dialog',
+  templateUrl: 'dialog-cotent-example-dialog.html',
+})
+export class DialogContentExampleDialog  implements OnInit {
+  formRegister: FormGroup | any;
+  public calificacionAlum:calificacionMateria | undefined;
+  public idAlumno:any;
+  public idMateria:any;
+  constructor(
+    private router: Router,
+    private spinner: NgxSpinnerService,
+    private service: pointService,
+    private _snackBar: MatSnackBar,
+    public dialog: MatDialog
+   
+
+  ) {
+    const regexPattern  = /\-?\d*\.?\d{1,2}/;
+    this.formRegister = new FormGroup({
+      califi: new FormControl('', [Validators.required,Validators.min(2),Validators.pattern(regexPattern)])
+    });
+
+  
+  }
+
+  ngOnInit() {
+    this.idAlumno= localStorage.getItem("idAlumno")
+  this.idMateria=  localStorage.getItem("idMateria")
+
+  }
+  agregar(){
+    if(!this.formRegister.valid){
+      return;
+    }
+    this.calificacionAlum=new calificacionMateria(null, this.idAlumno,this.formRegister.value.califi,this.idMateria);
+    this.service.putCalificacion( this.calificacionAlum).subscribe(
+      res => {
+        this._snackBar.open(res.msg, "cerrar",{
+          duration: 3000
+        });
+        setInterval(() =>   window.location.reload(), 1000);
+      
+      })
+      
+  }
+
+}

@@ -10,6 +10,7 @@ import {MenuComponent} from './menu/menu.component';
 import {HomeComponent} from './home/home.component'
 import {AlumnosComponent} from './alumnos/alumnos.component'
 import {CalificacionesComponent} from './calificaciones/calificaciones.component'
+import {DialogContentExampleDialog} from './calificaciones/calificaciones.component'
 import { MaterialModule } from './material.module';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { GoogleMapsModule } from '@angular/google-maps'
@@ -28,7 +29,8 @@ import { FileSaverModule } from 'ngx-filesaver';
     MenuComponent,
     HomeComponent,
     AlumnosComponent,
-    CalificacionesComponent
+    CalificacionesComponent,
+    DialogContentExampleDialog
   ],
   imports: [
     BrowserModule,
